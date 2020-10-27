@@ -11,6 +11,8 @@ class User:
 
     def set_link(self, child=None, parent=None):
         if child:
+            if child == self.parent:
+                raise ChildMayNotBeParentOfParent
             self.children.add(child)
             child.set_link(parent=self)
         if parent:
