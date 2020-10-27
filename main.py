@@ -3,27 +3,16 @@ class ChildMayNotBeParentOfParent(BaseException):
 
 
 class User:
-    def __init__(self, name):
-        self.name = name
-        self.childs = list()
-
-    def __str__(self):
-        user_name = f"User {self.name}"
-        user_childs = str()
-        if self.childs:
-            childs_name = [child.name for child in self.childs]
-            childs = ",".join(childs_name)
-            user_childs += f"\n{self.name}'s childs: {childs}"
-
-        return user_name + user_childs
+    def __init__(self):
+        self.children = set()
 
     def set_child(self, child):
-        for child in child.childs:
-            if not child._check_childs(self):
+        for child in child.children:
+            if not child._check_children(self):
                 raise ChildMayNotBeParentOfParent
-        self.childs.append(child)
+        self.children.add(child)
 
-    def _check_childs(self, parent):
-        for child in self.childs:
-            if child.name == parent.name:
+    def _check_children(self, parent):
+        for child in self.children:
+            if child == parent:
                 return False
