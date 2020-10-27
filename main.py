@@ -1,6 +1,6 @@
 class User:
     def __init__(self, name):
-        self.name = str(name)
+        self.name = name
         self.childs = list()
 
     def __str__(self):
@@ -15,11 +15,3 @@ class User:
 
     def set_childs(self, childs):
         self.childs.extend(childs)
-
-
-users = [User(i) for i in range(3)]
-
-users[0].set_childs(users[1:-1])
-
-for user in users:
-    print(user)
