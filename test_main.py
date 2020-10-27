@@ -13,6 +13,7 @@ def test_user_has_name():
 def test_user_has_childs():
     user_a = User("A")
     user_b = User("B")
+
     user_a.set_child(user_b)
 
     assert user_a.childs
@@ -30,3 +31,19 @@ def test_user_is_not_a_parent_of_his_own_parent():
 
     assert len(user_a.childs) == 1
     assert user_b.childs == []
+
+
+def test_user_is_not_a_parent_of_the_parent_of_his_own_parent():
+    user_a = User("A")
+    user_b = User("B")
+    user_c = User("C")
+
+    user_a.set_child(user_b)
+    user_b.set_child(user_c)
+
+    with pytest.raises(ChildMayNotBeParentOfParent):
+        user_c.set_child(user_a)
+
+    assert len(user_a.childs) == 1
+    assert len(user_b.childs) == 1
+    assert user_c.childs == []

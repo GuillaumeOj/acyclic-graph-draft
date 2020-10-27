@@ -19,6 +19,11 @@ class User:
 
     def set_child(self, child):
         for child in child.childs:
-            if child.name == self.name:
+            if not child._check_childs(self):
                 raise ChildMayNotBeParentOfParent
         self.childs.append(child)
+
+    def _check_childs(self, parent):
+        for child in self.childs:
+            if child.name == parent.name:
+                return False
