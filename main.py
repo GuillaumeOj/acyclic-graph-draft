@@ -1,3 +1,7 @@
+class ChildMayNotBeParentOfParent(BaseException):
+    pass
+
+
 class User:
     def __init__(self, name):
         self.name = name
@@ -13,5 +17,8 @@ class User:
 
         return user_name + user_childs
 
-    def set_childs(self, childs):
-        self.childs.extend(childs)
+    def set_child(self, child):
+        for child in child.childs:
+            if child.name == self.name:
+                raise ChildMayNotBeParentOfParent
+        self.childs.append(child)
