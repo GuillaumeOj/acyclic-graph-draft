@@ -18,8 +18,7 @@ class User:
             if child.parent:
                 raise ChildHasParent
 
-            if child == self.parent:
-                raise ChildMayNotBeParentOfParent
+            self._check_links(child)
 
             self.children.add(child)
             child.set_link(parent=self)
@@ -28,3 +27,8 @@ class User:
             if self.parent:
                 raise ChildHasParent
             self.parent = parent
+
+    def _check_links(self, child):
+        for user in child.children:
+            if user.parent == child:
+                raise ChildMayNotBeParentOfParent

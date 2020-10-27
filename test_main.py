@@ -59,3 +59,24 @@ def test_user_is_not_parent_of_his_own_parent():
 
     assert B.parent == A
     assert B.children == set()
+
+
+def test_user_is_not_parent_of_parent_of_his_own_parent():
+    A = User()
+    B = User()
+    C = User()
+
+    A.set_link(child=B)
+    B.set_link(child=C)
+
+    with pytest.raises(ChildMayNotBeParentOfParent):
+        C.set_link(child=A)
+
+    assert A.parent is None
+    assert A.children == {B}
+
+    assert B.parent == A
+    assert B.children == {C}
+
+    assert C.parent == B
+    assert C.children == set()
