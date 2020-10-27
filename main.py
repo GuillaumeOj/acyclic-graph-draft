@@ -3,16 +3,15 @@ class ChildMayNotBeParentOfParent(BaseException):
 
 
 class User:
+    pass
+
     def __init__(self):
+        self.parent = None
         self.children = set()
 
-    def set_child(self, child):
-        for child in child.children:
-            if not child._check_children(self):
-                raise ChildMayNotBeParentOfParent
-        self.children.add(child)
-
-    def _check_children(self, parent):
-        for child in self.children:
-            if child == parent:
-                return False
+    def set_link(self, child=None, parent=None):
+        if child:
+            self.children.add(child)
+            child.set_link(parent=self)
+        if parent:
+            self.parent = parent
