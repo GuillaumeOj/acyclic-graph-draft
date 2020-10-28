@@ -7,8 +7,6 @@ class ChildHasParent(BaseException):
 
 
 class User:
-    pass
-
     def __init__(self):
         self.parent = None
         self.children = set()
@@ -18,7 +16,7 @@ class User:
             if child.parent:
                 raise ChildHasParent
 
-            self._check_links(child)
+            self.check_link(child)
 
             self.children.add(child)
             child.set_link(parent=self)
@@ -28,7 +26,9 @@ class User:
                 raise ChildHasParent
             self.parent = parent
 
-    def _check_links(self, child):
-        for user in child.children:
-            if user.parent == child:
+    def check_link(self, child):
+        parent = self.parent
+        while parent is not None:
+            if parent == child:
                 raise ChildMayNotBeParentOfParent
+            parent = parent.parent
