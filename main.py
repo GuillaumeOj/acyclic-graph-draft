@@ -1,34 +1,34 @@
-class ChildMayNotBeParentOfParent(BaseException):
+class CircularRefer(BaseException):
     pass
 
 
-class ChildHasParent(BaseException):
+class RefereeIsAlreadyReferred(BaseException):
     pass
 
 
 class User:
     def __init__(self):
-        self.parent = None
-        self.children = set()
+        self.referrer = None
+        self.referees = set()
 
-    def set_link(self, child=None, parent=None):
-        if child:
-            if child.parent:
-                raise ChildHasParent
+    def set_referral(self, referee=None, referrer=None):
+        if referee:
+            if referee.referrer:
+                raise RefereeIsAlreadyReferred
 
-            self.check_link(child)
+            self.check_referral(referee)
 
-            self.children.add(child)
-            child.set_link(parent=self)
+            self.referees.add(referee)
+            referee.set_referral(referrer=self)
 
-        if parent:
-            if self.parent:
-                raise ChildHasParent
-            self.parent = parent
+        if referrer:
+            if self.referrer:
+                raise RefereeIsAlreadyReferred
+            self.referrer = referrer
 
-    def check_link(self, child):
-        parent = self.parent
-        while parent is not None:
-            if parent == child:
-                raise ChildMayNotBeParentOfParent
-            parent = parent.parent
+    def check_referral(self, referee):
+        referrer = self.referrer
+        while referrer is not None:
+            if referrer == referee:
+                raise CircularRefer
+            referrer = referrer.referrer
