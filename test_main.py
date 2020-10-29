@@ -55,16 +55,13 @@ def test_user_refer_his_referrer():
     A = User()
     B = User()
 
-    A.set_referrer(referee=B)
+    B.set_referrer(A)
 
     with pytest.raises(CircularRefer):
-        B.set_referrer(referee=A)
+        A.set_referrer(B)
 
     assert A.referrer is None
-    assert A.referees == {B}
-
     assert B.referrer == A
-    assert B.referees == set()
 
 
 def test_circular_refer():
@@ -74,33 +71,25 @@ def test_circular_refer():
     C = User()
     D = User()
 
-    A.set_referrer(referee=B)
-    B.set_referrer(referee=C)
-    C.set_referrer(referee=D)
+    B.set_referrer(A)
+    C.set_referrer(B)
+    D.set_referrer(C)
 
     with pytest.raises(CircularRefer):
-        D.set_referrer(referee=A)
+        A.set_referrer(D)
 
     assert A.referrer is None
-    assert A.referees == {B}
 
     assert B.referrer == A
-    assert B.referees == {C}
 
     assert C.referrer == B
-    assert C.referees == {D}
 
     assert D.referrer == C
-    assert D.referees == set()
 
     # many levels
     users = [User() for _ in range(1000)]
 
-    [
-        users[i].set_referrer(referee=users[i + 1])
-        for i in range(len(users))
-        if i < len(users) - 1
-    ]
+    [users[i + 1].set_referrer(users[i]) for i in range(len(users)) if i < len(users) - 1]
 
     with pytest.raises(CircularRefer):
-        users[-1].set_referrer(referee=users[0])
+        users[0].set_referrer(users[-1])
