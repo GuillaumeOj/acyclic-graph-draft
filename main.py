@@ -7,24 +7,16 @@ class RefereeIsAlreadyReferred(BaseException):
 
 
 class User:
+    users = list()
+
     def __init__(self):
         self.referrer = None
-        self.referees = set()
+        User.users.append(self)
 
-    def set_referral(self, referee=None, referrer=None):
-        if referee:
-            if referee.referrer:
-                raise RefereeIsAlreadyReferred
-
-            self.check_referral(referee)
-
-            self.referees.add(referee)
-            referee.set_referral(referrer=self)
-
-        if referrer:
-            if self.referrer:
-                raise RefereeIsAlreadyReferred
-            self.referrer = referrer
+    def set_referral(self, referrer):
+        if self.referrer:
+            raise RefereeIsAlreadyReferred
+        self.referrer = referrer
 
     def check_referral(self, referee):
         referrer = self.referrer
