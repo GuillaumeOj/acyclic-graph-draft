@@ -21,7 +21,12 @@ class Referral:
 
         self.referee = referee
         self.referrer = referrer
-        Referral.referrals.append(self)
+
+        self.add_referral(self)
+
+    @classmethod
+    def add_referral(cls, referral):
+        cls.referrals.append(referral)
 
     def check_referral(self, referee, referrer):
         if self.get_referrer(referee):
@@ -31,11 +36,11 @@ class Referral:
         while previous_referrer:
             if previous_referrer == referee:
                 raise CircularRefer
-            if previous_referrer:
-                previous_referrer = self.get_referrer(previous_referrer)
+            previous_referrer = self.get_referrer(previous_referrer)
 
-    def get_referrer(self, referee):
-        for referral in Referral.referrals:
+    @classmethod
+    def get_referrer(cls, referee):
+        for referral in cls.referrals:
             if referral.referee == referee:
                 return referral.referrer
 
