@@ -22,5 +22,10 @@ class User:
         self.referrer = referrer
 
     def check_referrer(self, referrer):
-        if referrer.referrer == self:
-            raise CircularRefer
+        previous_referrer = referrer.referrer
+
+        while previous_referrer:
+            if previous_referrer == self:
+                raise CircularRefer
+
+            previous_referrer = previous_referrer.referrer
