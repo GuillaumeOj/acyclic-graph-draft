@@ -27,6 +27,7 @@ class Referral:
     @classmethod
     def add_referral(cls, referral):
         cls.referrals.append(referral)
+        cls.referrals.sort(key=lambda ref: ref.referee.id)
 
     def check_referral(self, referee, referrer):
         if self.get_referrer(referee):
@@ -40,9 +41,19 @@ class Referral:
 
     @classmethod
     def get_referrer(cls, referee):
-        for referral in cls.referrals:
-            if referral.referee == referee:
-                return referral.referrer
+        if not cls.referrals:
+            return None
+
+        left = 0
+        right = len(cls.referrals) - 1
+        while left <= right:
+            middle = (left + right) // 2
+            if referee.id < cls.referrals[middle].referee.id:
+                right = middle - 1
+            elif referee.id > cls.referrals[middle].referee.id:
+                left = middle + 1
+            else:
+                return cls.referrals[middle].referrer
 
 
 class User:
